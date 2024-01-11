@@ -1,5 +1,9 @@
-const Authors = () => {
-  const authors = []
+const Authors = ({ authors }) => {
+  /* const authors = [] */
+
+  if (!authors) {
+    return (<div> Loading...</div>)
+  }
 
   return (
     <div>
