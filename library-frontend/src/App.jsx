@@ -22,9 +22,9 @@ const App = () => {
   return (
     <Router>
       <div>
-        <Link to="/">authors</Link>
-        <Link to="/books">books</Link>
-        <Link to="/add">add</Link>
+        <Link to="/">authors </Link>
+        <Link to="/books">books </Link>
+        <Link to="/add">add </Link>
       </div>
 
       <Routes>
