@@ -1,9 +1,13 @@
 import { useMutation } from "@apollo/client"
 import { useState } from "react"
 import { ALL_AUTHORS, EDIT_AUTHOR } from "../queries"
+import Select from "react-select"
 
 const Authors = ({ authors }) => {
   /* const authors = [] */
+
+
+  const options = authors.map(author => ({value: author.name, label: author.name}))
 
   // Has to refetch since manually adding the ID to the parameters to update the cache breaks the app, probably due to not passing the ID or bookCount
 
@@ -17,7 +21,9 @@ const Authors = ({ authors }) => {
   const submit = (event) => {
     event.preventDefault()
 
-    editAuthorYear({variables: {name, born} })
+    const onlyName = name.value
+
+    editAuthorYear({variables: {name: onlyName, born} })
 
     setName('')
     setBorn('')
@@ -49,13 +55,14 @@ const Authors = ({ authors }) => {
 
         <h3>Set birth year</h3>
 
-        <div>
+        <Select options={options} defaultValue={name} onChange={setName} />
+{/*         <div>
           name
           <input
             value={name}
             onChange={({ target }) => setName(target.value)}
           />
-        </div>
+        </div> */}
         <div>
           born
           <input
