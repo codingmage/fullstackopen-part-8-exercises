@@ -199,7 +199,17 @@ const resolvers = {
 
       if (!thisAuthor) {
         selectedAuthor = new Author({ name: args.author})
-        await selectedAuthor.save()
+        try {
+          await selectedAuthor.save()
+        } catch (error) {
+          throw new GraphQLError('New author is invalid', {
+            extensions: {
+              code: 'BAD_USER_INPUT',
+              invalidArgs: args.author,
+              error 
+            } 
+          })
+        }
       } else {
         selectedAuthor = thisAuthor
       }
@@ -250,13 +260,12 @@ const resolvers = {
 
       author.born = args.setBornTo
 
-      
       // authors = authors.map(author => author.name === args.name ? updatedAuthor : author)
 
       try {
         await author.save()
       } catch (error) {
-        throw new GraphQLError('Saving user failed', {
+        throw new GraphQLError('Updating author failed', {
           extensions: {
             code: 'BAD_USER_INPUT',
             invalidArgs: args.name,
