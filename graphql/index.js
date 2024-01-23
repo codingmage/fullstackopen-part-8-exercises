@@ -176,7 +176,7 @@ const resolvers = {
     allBooks: async (root, args) => {
       // https://stackoverflow.com/questions/18148166/find-document-with-array-that-contains-a-specific-value
         if(!args.author && !args.genre) {
-          return await Book.find({})
+          return await Book.find({}).populate('author')
         } else if (args.author && args.genre) {
 
           const booksByAuthor = books.filter(book => book.author === args.author)
@@ -193,7 +193,7 @@ const resolvers = {
         } else if (args.genre) {
           console.log(args.genre)
           // const booksByGenre = await Book.find({ genres: {$all : args.genre } })
-          const booksByGenre = await Book.find({ genres: args.genre })
+          const booksByGenre = await Book.find({ genres: args.genre }).populate('author')
           
           return booksByGenre
         }
@@ -215,8 +215,7 @@ const resolvers = {
     }
   },
   Mutation: {
-    addBook: async (root, args) => {
-
+    addBook: async (root, args, context) => {
       const loggedUser = context.loggedInUser
 
       if (!loggedUser) {
@@ -368,6 +367,7 @@ startStandaloneServer(server, {
         )
 
         const loggedInUser = await User.findById(decodedToken.id)
+        console.log(loggedInUser)
         return { loggedInUser }
     }
   }
