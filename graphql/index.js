@@ -282,7 +282,7 @@ const resolvers = {
 
       books = books.concat(newBook)
       return newBook }, */
-    editAuthor: async (root, args) => {
+    editAuthor: async (root, args, context) => {
 
       const loggedUser = context.loggedInUser
 
@@ -367,7 +367,6 @@ startStandaloneServer(server, {
         )
 
         const loggedInUser = await User.findById(decodedToken.id)
-        console.log(loggedInUser)
         return { loggedInUser }
     }
   }

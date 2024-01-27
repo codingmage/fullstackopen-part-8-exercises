@@ -14,6 +14,7 @@ const App = () => {
   const resultBooks = useQuery(ALL_BOOKS)
 
   const [token, setToken] = useState(null)
+
   const client = useApolloClient()
 
   useEffect(() => {
@@ -37,6 +38,10 @@ const App = () => {
 
   const books = resultBooks.data.allBooks
 
+  const selectedGenres = books.map(book => book.genres).flat()
+  
+  const trimmedGenres = [... new Set(selectedGenres)]
+
   return (
     <Router>
       <div>
@@ -53,7 +58,7 @@ const App = () => {
       </div>
 
       <Routes>
-        <Route path="/books" element={<Books books={books} />} />
+        <Route path="/books" element={<Books books={books} genres={trimmedGenres}/>} />
         <Route path="/add" element={<NewBook />} />
         <Route path="login" element={<LoginForm setToken={setToken} />} />
         <Route path="/" element={<Authors authors={authors}/>} />

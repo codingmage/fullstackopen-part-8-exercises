@@ -21,6 +21,7 @@ const Authors = ({ authors }) => {
   const submit = (event) => {
     event.preventDefault()
 
+
     const onlyName = name.value
 
     editAuthorYear({variables: {name: onlyName, born} })
@@ -55,7 +56,7 @@ const Authors = ({ authors }) => {
 
         <h3>Set birth year</h3>
 
-        <Select options={options} defaultValue={name} onChange={setName} />
+        <Select options={options} defaultValue={name} onChange={setName} value={name} />
 {/*         <div>
           name
           <input
