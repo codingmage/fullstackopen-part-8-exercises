@@ -11,6 +11,13 @@ const Books = ({ books, genres }) => {
     skip: !genre
   })
 
+  if (filteredBooks.loading) return (
+    <div>
+      <h2>books</h2>
+      <div>Loading...</div>
+    </div>
+  )
+
   return (
     <div>
       <h2>books</h2>
@@ -25,7 +32,7 @@ const Books = ({ books, genres }) => {
             <th>published</th>
           </tr>
 
-        {(filteredBooks.data && genre) ? 
+        {(filteredBooks.data) ? 
           filteredBooks.data.allBooks.map((a) => (
             <tr key={a.title}>
               <td>{a.title}</td>
@@ -41,14 +48,6 @@ const Books = ({ books, genres }) => {
               <td>{a.published}</td>
             </tr>
           ))} 
-
-{/*           {books.map((a) => (
-            <tr key={a.title}>
-              <td>{a.title}</td>
-              <td>{a.author.name}</td>
-              <td>{a.published}</td>
-            </tr>
-          ))} */}
         </tbody>
       </table>
 

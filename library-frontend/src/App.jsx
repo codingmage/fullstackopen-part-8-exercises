@@ -3,15 +3,18 @@ import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
 import { BrowserRouter as Router, Link, Route, Routes } from 'react-router-dom'
-import { ALL_AUTHORS, ALL_BOOKS } from './queries'
+import { ALL_AUTHORS, ALL_BOOKS, LOGGED_USER } from './queries'
 import { useEffect, useState } from 'react'
 import LoginForm from './components/LoginForm'
+import Favorite from './components/Favorite'
 
 const App = () => {
 
   const resultAuthor = useQuery(ALL_AUTHORS)
 
   const resultBooks = useQuery(ALL_BOOKS)
+
+  const resultUser = useQuery(LOGGED_USER)
 
   const [token, setToken] = useState(null)
 
@@ -26,17 +29,20 @@ const App = () => {
 
   const logout = () => {
     setToken(null)
+    setCurrentUser(null)
     localStorage.clear()
     client.resetStore()
   }
 
-  if (resultAuthor.loading || resultBooks.loading)  {
+  if (resultAuthor.loading || resultBooks.loading || resultUser.loading)  {
     return <div>loading...</div>
   }
 
   const authors = resultAuthor.data.allAuthors
 
   const books = resultBooks.data.allBooks
+
+  const thisUser = resultUser.data.me
 
   const selectedGenres = books.map(book => book.genres).flat()
   
@@ -50,6 +56,7 @@ const App = () => {
         {token ? 
         <>
           <Link to="/add">add </Link>
+          <Link to="/favorite">recommend</Link>
           <button onClick={logout}>logout</button> 
         </>
         : 
@@ -62,6 +69,7 @@ const App = () => {
         <Route path="/add" element={<NewBook />} />
         <Route path="login" element={<LoginForm setToken={setToken} />} />
         <Route path="/" element={<Authors authors={authors}/>} />
+        <Route path="favorite" element={<Favorite genre={thisUser.favoriteGenre} />} />
       </Routes>
 
     </Router>

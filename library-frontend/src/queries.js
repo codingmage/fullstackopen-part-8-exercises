@@ -51,6 +51,7 @@ mutation createNewBook($title: String!, $author: String!, $published: Int!, $gen
         author {
             name
         }
+        id
     } 
 }
 `
@@ -72,4 +73,13 @@ export const LOGIN = gql`
             value
         }
     }
+`
+
+export const LOGGED_USER = gql`
+  query {
+    me {
+      username
+      favoriteGenre
+    }
+  }
 `
