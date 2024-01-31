@@ -1,26 +1,25 @@
-import { useState, useEffect } from 'react'
-import { useMutation } from '@apollo/client'
-import { LOGIN } from '../queries'
-import { useNavigate } from 'react-router-dom'
+import { useState, useEffect } from "react"
+import { useMutation } from "@apollo/client"
+import { LOGIN } from "../queries"
+import { useNavigate } from "react-router-dom"
 
 const LoginForm = ({ /* setError, */ setToken }) => {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+  const [username, setUsername] = useState("")
+  const [password, setPassword] = useState("")
 
   const navigate = useNavigate()
 
-
-  const [ login, result ] = useMutation(LOGIN, {
-/*     onError: (error) => {
+  const [login, result] = useMutation(LOGIN, {
+    /*     onError: (error) => {
       setError(error.graphQLErrors[0].message)
     } */
   })
 
   useEffect(() => {
-    if ( result.data ) {
+    if (result.data) {
       const token = result.data.login.value
       setToken(token)
-      localStorage.setItem('loggedUser', token)
+      localStorage.setItem("loggedUser", token)
       navigate("/")
     }
   }, [result.data, setToken, navigate])
@@ -35,19 +34,21 @@ const LoginForm = ({ /* setError, */ setToken }) => {
     <div>
       <form onSubmit={submit}>
         <div>
-          username <input
+          username{" "}
+          <input
             value={username}
             onChange={({ target }) => setUsername(target.value)}
           />
         </div>
         <div>
-          password <input
-            type='password'
+          password{" "}
+          <input
+            type="password"
             value={password}
             onChange={({ target }) => setPassword(target.value)}
           />
         </div>
-        <button type='submit'>login</button>
+        <button type="submit">login</button>
       </form>
     </div>
   )

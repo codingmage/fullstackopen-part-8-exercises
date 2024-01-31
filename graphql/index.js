@@ -1,5 +1,5 @@
 const { ApolloServer } = require("@apollo/server")
-const { startStandaloneServer } = require("@apollo/server/standalone")
+/* const { startStandaloneServer } = require("@apollo/server/standalone") */
 /* const { v1: uuid } = require("uuid") */
 const jwt = require("jsonwebtoken")
 const { expressMiddleware } = require("@apollo/server/express4")
@@ -10,6 +10,8 @@ const { makeExecutableSchema } = require("@graphql-tools/schema")
 const express = require("express")
 const cors = require("cors")
 const http = require("http")
+const { WebSocketServer } = require("ws")
+const { useServer } = require("graphql-ws/lib/use/ws")
 
 const typeDefs = require("./schema")
 const resolvers = require("./resolvers")
@@ -37,9 +39,26 @@ const start = async () => {
   const app = express()
   const httpServer = http.createServer(app)
 
+  const wsServer = new WebSocketServer({ server: httpServer, path: "/" })
+
+  const schema = makeExecutableSchema({ typeDefs, resolvers })
+  const serverCleanup = useServer({ schema }, wsServer)
+
   const server = new ApolloServer({
-    schema: makeExecutableSchema({ typeDefs, resolvers }),
-    plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+    /* schema: makeExecutableSchema({ typeDefs, resolvers }) */
+    schema,
+    plugins: [
+      ApolloServerPluginDrainHttpServer({ httpServer }),
+      {
+        async serverWillStart() {
+          return {
+            async drainServer() {
+              await serverCleanup.dispose()
+            },
+          }
+        },
+      },
+    ],
   })
 
   await server.start()
@@ -66,7 +85,7 @@ const start = async () => {
   const PORT = 4000
 
   httpServer.listen(PORT, () => {
-    console.log(`Server ready at port ${PORT}`)
+    console.log(`Server running on http://localhost:${PORT}`)
   })
 }
 

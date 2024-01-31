@@ -3,20 +3,20 @@ import { useState } from "react"
 import { BOOKS_WITH_GENRE } from "../queries"
 
 const Books = ({ books, genres }) => {
-
   const [genre, setGenre] = useState(null)
 
   const filteredBooks = useQuery(BOOKS_WITH_GENRE, {
     variables: { genre },
-    skip: !genre
+    skip: !genre,
   })
 
-  if (filteredBooks.loading) return (
-    <div>
-      <h2>books</h2>
-      <div>Loading...</div>
-    </div>
-  )
+  if (filteredBooks.loading)
+    return (
+      <div>
+        <h2>books</h2>
+        <div>Loading...</div>
+      </div>
+    )
 
   return (
     <div>
@@ -32,30 +32,31 @@ const Books = ({ books, genres }) => {
             <th>published</th>
           </tr>
 
-        {(filteredBooks.data) ? 
-          filteredBooks.data.allBooks.map((a) => (
-            <tr key={a.title}>
-              <td>{a.title}</td>
-              <td>{a.author.name}</td>
-              <td>{a.published}</td>
-            </tr>
-          ))
-          :
-          books.map((a) => (
-            <tr key={a.title}>
-              <td>{a.title}</td>
-              <td>{a.author.name}</td>
-              <td>{a.published}</td>
-            </tr>
-          ))} 
+          {filteredBooks.data
+            ? filteredBooks.data.allBooks.map((a) => (
+                <tr key={a.title}>
+                  <td>{a.title}</td>
+                  <td>{a.author.name}</td>
+                  <td>{a.published}</td>
+                </tr>
+              ))
+            : books.map((a) => (
+                <tr key={a.title}>
+                  <td>{a.title}</td>
+                  <td>{a.author.name}</td>
+                  <td>{a.published}</td>
+                </tr>
+              ))}
         </tbody>
       </table>
 
       <div>
-        {genres.map(thisGenre => <button onClick={() => setGenre(thisGenre)} key={thisGenre}>{thisGenre}</button>)}
+        {genres.map((thisGenre) => (
+          <button onClick={() => setGenre(thisGenre)} key={thisGenre}>
+            {thisGenre}
+          </button>
+        ))}
       </div>
-
-
     </div>
   )
 }

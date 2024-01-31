@@ -6,28 +6,29 @@ import Select from "react-select"
 const Authors = ({ authors }) => {
   /* const authors = [] */
 
-
-  const options = authors.map(author => ({value: author.name, label: author.name}))
+  const options = authors.map((author) => ({
+    value: author.name,
+    label: author.name,
+  }))
 
   // Has to refetch since manually adding the ID to the parameters to update the cache breaks the app, probably due to not passing the ID or bookCount
 
-  const [ editAuthorYear ] = useMutation(EDIT_AUTHOR, {
-    refetchQueries: [ {query: ALL_AUTHORS} ]
+  const [editAuthorYear] = useMutation(EDIT_AUTHOR, {
+    refetchQueries: [{ query: ALL_AUTHORS }],
   })
 
-  const [name, setName] = useState('')
-  const [born, setBorn] = useState('')
+  const [name, setName] = useState("")
+  const [born, setBorn] = useState("")
 
   const submit = (event) => {
     event.preventDefault()
 
-
     const onlyName = name.value
 
-    editAuthorYear({variables: {name: onlyName, born} })
+    editAuthorYear({ variables: { name: onlyName, born } })
 
-    setName('')
-    setBorn('')
+    setName("")
+    setBorn("")
   }
 
   return (
@@ -50,14 +51,16 @@ const Authors = ({ authors }) => {
         </tbody>
       </table>
 
-      
-
       <form onSubmit={submit}>
-
         <h3>Set birth year</h3>
 
-        <Select options={options} defaultValue={name} onChange={setName} value={name} />
-{/*         <div>
+        <Select
+          options={options}
+          defaultValue={name}
+          onChange={setName}
+          value={name}
+        />
+        {/*         <div>
           name
           <input
             value={name}
@@ -73,8 +76,6 @@ const Authors = ({ authors }) => {
           />
         </div>
         <button type="submit">update author</button>
-
-
       </form>
     </div>
   )
