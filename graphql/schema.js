@@ -14,6 +14,7 @@ const typeDefs = `
         name: String!
         born: Int
         id: ID!
+        books: [Book!]
         bookCount: Int
     }
 

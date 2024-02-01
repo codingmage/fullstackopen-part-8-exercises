@@ -4,6 +4,7 @@ const Author = require("./models/author")
 const Book = require("./models/book")
 const User = require("./models/user")
 const { PubSub } = require("graphql-subscriptions")
+const author = require("./models/author")
 const pubsub = new PubSub()
 
 let authors = [
@@ -131,9 +132,34 @@ const resolvers = {
               return authorObject
           }) */
 
-      const eachAuthor = await Author.find({})
+      // const eachAuthor = await Author.find({})
 
-      return eachAuthor
+      const authorsWithBooks = await Author.aggregate([
+        {
+          $lookup: {
+            from: "books",
+            localField: "_id",
+            foreignField: "author",
+            as: "books",
+          },
+        },
+      ])
+
+      /*       
+      Alternative way
+      
+      const aggregateAuthors = Author.aggregate()
+
+      const authorsWithBooks = await aggregateAuthors.lookup({
+        from: "books",
+        localField: "_id",
+        foreignField: "author",
+        as: "books",
+      }) */
+
+      authorsWithBooks.map((author) => (author.bookCount = author.books.length))
+
+      return authorsWithBooks
     },
     me: (root, args, context) => {
       return context.loggedInUser
